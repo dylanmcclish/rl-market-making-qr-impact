@@ -132,11 +132,11 @@ class QueueReactiveBook:
             event = {'type': 'cancel', 'side': 'ask', 'level': level, 'size': removed}
         elif idx == 4 * n:
             size = self._draw_mo_size()
-            fills = self.apply_market_order('sell', size)  # buy MO hits the ask
+            fills = self.apply_market_order('ask', size)  # buy MO hits the ask
             event = {'type': 'MO', 'side': 'buy', 'size': size, 'fills': fills}
         else:
             size = self._draw_mo_size()
-            fills = self.apply_market_order('buy', size)  # sell MO hits the bid
+            fills = self.apply_market_order('bid', size)  # sell MO hits the bid
             event = {'type': 'MO', 'side': 'sell', 'size': size, 'fills': fills}
 
         return dt, event
@@ -153,6 +153,7 @@ class QueueReactiveBook:
         an unbounded `while` here would spin forever if every level on this
         side is simultaneously empty (observed in practice: possible after
         a chain of cancellations, not just a theoretical edge case)."""
+        assert side in ('bid', 'ask'), f"side must be 'bid' or 'ask', got {side!r}"
         sizes = self.bid_sizes if side == 'bid' else self.ask_sizes
         shifts = 0
         while sizes[0] <= 0 and shifts < self.n_levels - 1:
@@ -170,9 +171,12 @@ class QueueReactiveBook:
 
     def apply_market_order(self, resting_side, size):
         """A market order that removes `size` shares from the book side
-        `resting_side` ('bid' or 'sell-side liquidity', 'ask' likewise),
+        `resting_side` ('bid' or 'ask' -- the side of resting liquidity it
+        consumes, i.e. a buy MO passes 'ask' and a sell MO passes 'bid'),
         walking through levels on a partial fill. Returns a list of
         (level, filled_qty) tuples."""
+        assert resting_side in ('bid', 'ask'), \
+            f"resting_side must be 'bid' or 'ask', got {resting_side!r}"
         sizes = self.bid_sizes if resting_side == 'bid' else self.ask_sizes
         fills = []
         remaining = size

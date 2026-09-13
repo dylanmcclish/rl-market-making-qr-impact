@@ -231,8 +231,7 @@ The testing window was an episode consisting of 5{,}000{,}000 events drawn from 
 
 \subsection{Computational Implementation}
 
-% TODO(Dylan): insert your GitHub link.
-The entire implementation can be found in the GitHub link below: \texttt{[INSERT LINK]}
+The entire implementation can be found at \url{https://github.com/dylanmcclish/rl-market-making-qr-impact}.
 
 \section{Results}
 \label{sec:results}
@@ -287,6 +286,18 @@ Random                        & 31.6 $\pm$ 5.9   & 1.6 $\pm$ 1.2  \\
 \normalsize
 \end{table}
 
+These results are discussed in Section~\ref{sec:discussion}.
+
+\begin{figure}[h]
+\centering
+\includegraphics[width=0.8\textwidth]{figures/market_environment_timeseries.png}
+\caption{Mid-price, best bid, and best ask over an 8,000-event excerpt of the QR simulator (not the full 5,000,000-event evaluation episode, which is illegible as a line plot at that scale).}
+\label{fig:market-env}
+\end{figure}
+
+\section{Discussion}
+\label{sec:discussion}
+
 Interestingly, the consolidated agent performs slightly worse than the basic agent in the testing set in both simulators. Both agents perform markedly worse in PnL than the fixed $\theta=1$ benchmark (2.225 compared to 0 and $-0.000013$).
 
 However, the $\theta=1$ benchmark has a MAP of 3398.78 in the QR simulator and 628.08 in the ZI simulator. This reflects the lack of penalty on inventory of the fixed agent. This lack of inventory management indicates that $\theta=1$ was exposed to large amounts of inventory risk during the testing episode. Although this turned out in its favor, this is a fixed-width policy with no knowledge of the market environment. If a large swing happened in the price due to some fundamental change in the market, the fixed-width agent would accumulate a large inventory position at increasingly worse prices.
@@ -296,37 +307,6 @@ Interestingly, while actively trading, the consolidated agent is effectively man
 Next, in the QR environment, the basic agent learns to never trade (0.0 fills in Table~\ref{tab:fills}); in the ZI environment it trades only exceedingly rarely (a mean of 1.2 fills per 5{,}000{,}000-event episode). I hypothesize that this is a result of the configuration of the basic agent in conjunction with the market environment. In this market, fills are very sparse. So, most actions taken by an agent are going to be viewed as having essentially zero reward. Moreover, the basic agent only has access to internal state information (current active quotes and inventory). So, the lack of information of the agent on the market state means that it is likely not getting consistently advantageous fills. Thus, the rewards are likely negative or indistinguishable from zero, and the agent converges on almost never trading as a consequence.
 
 However, the relative comparison on inventory management between the basic agent and the consolidated agent is most interesting. As Spooner observes, ``the basic agent regularly holds a non-zero inventory, exposing itself to changes in the security's value for extended periods of time\ldots [while] for the consolidated agent, it appears that the learnt policy targets a near-zero inventory, relying less on speculative trading and thus yielding the consistency one expects from a good market making strategy'' \citep{spooner2018}. The statistics reveal that the basic agent and consolidated agent in this simulated environment exhibit very similar results. The MAP can be viewed as a proxy for the absolute mean of the inventory process. The MAP of the basic agent was 0 in the QR environment and 98.74 in the ZI environment. The MAP of the consolidated agent was 0.01 in the QR environment and 35.33 in the ZI environment. It is interesting that the consolidated agent better effectively managed position within the market-impact QR environment. Coupled with the average of 33.0 fills/episode of the consolidated agent, this suggests that the more realistic market dynamics were leveraged by the consolidated agent to reduce inventory.
-
-% TODO(Dylan): figure placeholder -- commented out below since the plot
-% (mid / best bid / best ask over the testing episode) hasn't been
-% generated yet; a rendered "[FIGURE NOT YET GENERATED]" caption can't go
-% out in a submission. Re-run the simulator with event-by-event logging
-% and drop in figures/market_environment_timeseries.png, then uncomment.
-% \begin{figure}[h]
-% \centering
-% \includegraphics[width=0.8\textwidth]{figures/market_environment_timeseries.png}
-% \caption{Mid-price, best bid, and best ask over the course of the testing episode.}
-% \label{fig:market-env}
-% \end{figure}
-
-\section{Discussion}
-\label{sec:discussion}
-
-
-
-
-% TODO(Dylan): this is the section your outline calls "what it means,
-% limitations, honestly stated" -- the Limitations subsection below is
-% filled in from your draft, but the interpretive discussion of *why* the
-% basic agent collapses to never trading, and why the consolidated agent's
-% behavior differs, is something you should write in your own words. You
-% and I talked through one candidate explanation in our conversation (the
-% basic agent's state is too impoverished to distinguish good quoting
-% moments from adverse-selection-heavy ones, so its value estimate for
-% quoting at all is pulled to roughly zero/negative, making "do nothing"
-% a stable fixed point of the SARSA update) -- flagging it here as a
-% pointer to that conversation, not as inserted prose, since you said you
-% want to be able to defend everything in the final draft yourself.
 
 \subsection{Limitations}
 \label{sec:limitations}
