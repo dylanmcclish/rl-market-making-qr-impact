@@ -21,6 +21,11 @@
 \begin{document}
 \maketitle
 
+\begin{quote}
+\small
+\noindent\textbf{AI Disclosure.} The text of this paper was written by the author without the assistance of AI tools. AI coding assistants were used during the development of the accompanying codebase (available at \url{https://github.com/dylanmcclish/rl-market-making-qr-impact}), including implementation, debugging, and code review.
+\end{quote}
+
 \begin{abstract}
 Reinforcement Learning (RL) is a powerful tool that has much potential in the financial markets. In Spooner et al.'s Market Making via Reinforcement Learning, varying configurations of RL agents are trained and evaluated on historical order book data. However, this historical order book does not allow for market impact, nor is it easily generalizable for robust testing. To address this, we investigate the RL agent configuration of Spooner in a simulated order-book environment. We use a Zero-Intelligence model as a control, and then a Queue-Reactive model as a more realistic environment with market impact. The total PnL, mean absolute position, and trading behavior of the agents is then evaluated. In the Queue-Reactive simulator, the basic agent is essentially inactive (0.0 fills/episode) while the consolidated agent trades meaningfully more (33.0 fills/episode) yet still keeps its mean absolute position near zero (0.01, versus 0.00 for the basic agent). This suggests that, even under simulated market impact, the consolidated agent's richer state representation lets it trade far more actively than the basic agent while still keeping its own inventory close to zero, echoing the inventory-management advantage Spooner reports for the historical order book.
 
