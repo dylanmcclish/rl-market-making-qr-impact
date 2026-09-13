@@ -1,0 +1,34 @@
+.DS_Store
+.claude/
+
+# raw market data archive (large, not for redistribution)
+archive/
+work/
+
+# compiled binaries
+cpp/bench_fills
+cpp/diagnose
+cpp/eval
+cpp/tests
+cpp/train
+cpp/smoketest_backup/
+
+# large data dumps / logs / run artifacts
+cpp/trade_sizes.txt
+cpp/*.csv
+cpp/*.log
+*.log
+
+# calibration/results artifacts (not source)
+artifact_data.json
+calibrated_params.json
+calibrated_params_7day.json
+calibration_progression.json
+validation_results.json
+
+# LaTeX build artifacts
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log
+paper/*.out
